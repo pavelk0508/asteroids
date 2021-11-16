@@ -15,12 +15,12 @@ namespace Asteroids.Logic
         /// <summary>
         /// Время отката лазера.
         /// </summary>
-        public readonly float LazerCountdown = 1f;
+        public readonly float LaserCountdown = 1f;
         
         /// <summary>
         /// Текущее время отката лазера.
         /// </summary>
-        public float CurrentLazerCountdown = 1f;
+        public float CurrentLaserCountdown = 1f;
 
         /// <summary>
         /// Текущее время отката обычного выстрела.
@@ -30,7 +30,7 @@ namespace Asteroids.Logic
         /// <summary>
         /// Время отката обычного выстрела
         /// </summary>
-        public readonly float PeriodBulletShoot = 0.25f;
+        public readonly float BulletCountdown = 0.25f;
 
         /// <summary>
         /// Уголовая скорость (град./сек) при нажатии на управление поворотом.
@@ -55,22 +55,22 @@ namespace Asteroids.Logic
         /// <summary>
         /// Максимальное количество лазера.
         /// </summary>
-        public readonly int MaxLazerCount = 3;
+        public readonly int MaxLaserCount = 3;
 
         /// <summary>
         /// Текущее количество лазера.
         /// </summary>
-        public int LazerCount { get; private set; } = 3;
+        public int LaserCount { get; private set; } = 3;
 
         /// <summary>
         /// Время регенерации лазера.
         /// </summary>
-        public readonly float LazerGenerationCountDown = 10f;
+        public readonly float LaserGenerationCountDown = 10f;
         
         /// <summary>
         /// Текущее время регенерации лазера.
         /// </summary>
-        public float CurrentLazerGenerationCountDown { get; private set; }
+        public float CurrentLaserGenerationCountDown { get; private set; }
 
         /// <summary>
         /// Максимальная скорость движения от двигателя.
@@ -116,7 +116,7 @@ namespace Asteroids.Logic
         /// <param name="direction">Направление выстрела.</param>
         private void ProcessPrimaryShooting(GameManager gameManager, Vector2 direction)
         {
-            if (_bulletShootTime > PeriodBulletShoot)
+            if (_bulletShootTime > BulletCountdown)
             {
                 if (PrimaryShooting)
                 {
@@ -137,33 +137,33 @@ namespace Asteroids.Logic
         /// <param name="gameManager">Игровой менеджер.</param>
         private void ProcessSecondaryShooting(GameManager gameManager)
         {
-            if (CurrentLazerGenerationCountDown < LazerGenerationCountDown)
+            if (CurrentLaserGenerationCountDown < LaserGenerationCountDown)
             {
-                CurrentLazerGenerationCountDown += gameManager.GameWindow.GetTimeStep();
+                CurrentLaserGenerationCountDown += gameManager.GameWindow.GetTimeStep();
             }
             else
             {
-                CurrentLazerGenerationCountDown = LazerGenerationCountDown;
-                if (LazerCount < MaxLazerCount)
+                CurrentLaserGenerationCountDown = LaserGenerationCountDown;
+                if (LaserCount < MaxLaserCount)
                 {
-                    LazerCount++;
-                    CurrentLazerGenerationCountDown = 0f;
+                    LaserCount++;
+                    CurrentLaserGenerationCountDown = 0f;
                 }
             }
             
-            if (CurrentLazerCountdown >= LazerCountdown)
+            if (CurrentLaserCountdown >= LaserCountdown)
             {
-                CurrentLazerCountdown = LazerCountdown;
-                if (SecondaryShooting && LazerCount > 0)
+                CurrentLaserCountdown = LaserCountdown;
+                if (SecondaryShooting && LaserCount > 0)
                 {
-                    gameManager.AddLazer(Position, Angle);
-                    CurrentLazerCountdown = 0f;
-                    LazerCount--;
+                    gameManager.AddLaser(Position, Angle);
+                    CurrentLaserCountdown = 0f;
+                    LaserCount--;
                 }
             }
             else
             {
-                CurrentLazerCountdown += gameManager.GameWindow.GetTimeStep();
+                CurrentLaserCountdown += gameManager.GameWindow.GetTimeStep();
             }
         }
 

@@ -54,16 +54,16 @@
         protected override void OnCollision(EntityBase entityBase)
         {
             CheckCollisionWithBullet(entityBase);
-            CheckCollisionWithLazer(entityBase);
+            CheckCollisionWithLaser(entityBase);
         }
 
         /// <summary>
         /// Проверка столкновения с лазером.
         /// </summary>
         /// <param name="entityBase">Лазер.</param>
-        private void CheckCollisionWithLazer(EntityBase entityBase)
+        private void CheckCollisionWithLaser(EntityBase entityBase)
         {
-            if (entityBase is Lazer)
+            if (entityBase is Laser)
             {
                 HP = 0;
                 CanBeDeleted = true;

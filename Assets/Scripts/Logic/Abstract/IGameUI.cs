@@ -12,21 +12,21 @@ namespace Asteroids.Logic
         /// </summary>
         /// <param name="time">Текущее время отката.</param>
         /// <param name="maxTime">Максимальное время отката.</param>
-        void UpdateLazerCounddown(float time, float maxTime);
+        void UpdateLaserCounddown(float time, float maxTime);
         
         /// <summary>
         /// Обновление количества лазеров.
         /// </summary>
         /// <param name="count">Текущее количество.</param>
         /// <param name="max">Максимальное количество.</param>
-        void UpdateLazersCount(int count, int max);
+        void UpdateLasersCount(int count, int max);
         
         /// <summary>
         /// Обновление времени отката регенерации количества лазеров.
         /// </summary>
         /// <param name="time">Время отката.</param>
         /// <param name="maxTime">Максимальное время отката.</param>
-        void UpdateLazerRegenerationCountdown(float time, float maxTime);
+        void UpdateLaserRegenerationCountdown(float time, float maxTime);
         
         /// <summary>
         /// Обновление информации о скорости игрока.

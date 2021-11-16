@@ -51,7 +51,7 @@ namespace Asteroids.View
         /// <summary>
         /// Префаб лазера.
         /// </summary>
-        public GameEntity LazerPrefab;
+        public GameEntity LaserPrefab;
         
         /// <summary>
         /// Префаб летающей тарелки.
@@ -83,7 +83,7 @@ namespace Asteroids.View
             _gameManager.SetUfoSpawningFunction(SpawnUfo);
             _gameManager.SetMeteorSpawningFunction(SpawnMeteor);
             _gameManager.SetBulletSpawningFunction(SpawnBullet);
-            _gameManager.SetLazerSpawningFunction(SpawnLazer);
+            _gameManager.SetLaserSpawningFunction(SpawnLaser);
             _gameManager.OnGameOver += OnGameOver;
         }
 
@@ -119,9 +119,9 @@ namespace Asteroids.View
         /// Создание лазера.
         /// </summary>
         /// <returns>Экземпляр лазера.</returns>
-        private IGameEntity SpawnLazer()
+        private IGameEntity SpawnLaser()
         {
-            return Instantiate(LazerPrefab, GameWindow.transform);
+            return Instantiate(LaserPrefab, GameWindow.transform);
         }
 
         /// <summary>

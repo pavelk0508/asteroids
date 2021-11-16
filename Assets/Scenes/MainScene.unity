@@ -493,9 +493,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25ab1a58c86349eea14218c11d65be7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LazerCountdownField: {fileID: 940922797}
-  LazerGenerationCountdownField: {fileID: 2020071264}
-  LazerCountField: {fileID: 1648179028}
+  LaserCountdownField: {fileID: 940922797}
+  LaserGenerationCountdownField: {fileID: 2020071264}
+  LaserCountField: {fileID: 1648179028}
   VelocityField: {fileID: 1456383540}
   PositionField: {fileID: 1156843786}
   RotationField: {fileID: 160645100}
@@ -644,10 +644,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1366, y: 768}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -5541,7 +5541,7 @@ GameObject:
   - component: {fileID: 940922798}
   - component: {fileID: 940922797}
   m_Layer: 5
-  m_Name: LazerCountdown
+  m_Name: LaserCountdown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6278,7 +6278,7 @@ MonoBehaviour:
   MiddleMeteorPrefab: {fileID: 8819723755941790156, guid: 0654476d8522a91469b6e26edb424ada, type: 3}
   SmallMeteorPrefab: {fileID: 2952409610195408381, guid: d8706159792346844b5673cd23c3dfac, type: 3}
   BulletPrefab: {fileID: 4194171363066490944, guid: 2a4b612cd8515864a854fd77c61051af, type: 3}
-  LazerPrefab: {fileID: 1053090324537993476, guid: 4a656a037ca2fce4a9aacb056190bac4, type: 3}
+  LaserPrefab: {fileID: 1053090324537993476, guid: 4a656a037ca2fce4a9aacb056190bac4, type: 3}
   UfoPrefab: {fileID: 4045600018599965245, guid: 28a30b701a759684f87c176ee5c7214c, type: 3}
   MainMenuPanel: {fileID: 1330036348}
   GameOverPanel: {fileID: 1026463904}
@@ -6949,7 +6949,7 @@ GameObject:
   - component: {fileID: 1648179029}
   - component: {fileID: 1648179028}
   m_Layer: 5
-  m_Name: LazersCount
+  m_Name: LasersCount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7114,7 +7114,7 @@ GameObject:
   - component: {fileID: 2020071265}
   - component: {fileID: 2020071264}
   m_Layer: 5
-  m_Name: LazerGeneration
+  m_Name: LaserGeneration
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

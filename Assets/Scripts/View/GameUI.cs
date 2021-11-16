@@ -12,17 +12,17 @@ namespace Asteroids.View
         /// <summary>
         /// Поле вывода времени отката лазера.
         /// </summary>
-        public Text LazerCountdownField;
+        public Text LaserCountdownField;
         
         /// <summary>
         /// Поле вывода времени отката генерации лазера.
         /// </summary>
-        public Text LazerGenerationCountdownField;
+        public Text LaserGenerationCountdownField;
         
         /// <summary>
         /// Поле вывода количества лазера.
         /// </summary>
-        public Text LazerCountField;
+        public Text LaserCountField;
         
         /// <summary>
         /// Поле вывода скорости игрока.
@@ -54,9 +54,9 @@ namespace Asteroids.View
         /// </summary>
         /// <param name="time">Текущее время отката.</param>
         /// <param name="maxTime">Максимальное время отката.</param>
-        public void UpdateLazerCounddown(float time, float maxTime)
+        public void UpdateLaserCounddown(float time, float maxTime)
         {
-            LazerCountdownField.text = $"Откат лазера: {time:F} / {maxTime:F}";
+            LaserCountdownField.text = $"Откат лазера: {time:F} / {maxTime:F}";
         }
 
         /// <summary>
@@ -64,9 +64,9 @@ namespace Asteroids.View
         /// </summary>
         /// <param name="count">Текущее количество.</param>
         /// <param name="max">Максимальное количество.</param>
-        public void UpdateLazersCount(int count, int max)
+        public void UpdateLasersCount(int count, int max)
         {
-            LazerCountField.text = $"Количество лазера: {count} / {max}";
+            LaserCountField.text = $"Количество лазера: {count} / {max}";
         }
 
         /// <summary>
@@ -74,9 +74,9 @@ namespace Asteroids.View
         /// </summary>
         /// <param name="time">Время отката.</param>
         /// <param name="maxTime">Максимальное время отката.</param>
-        public void UpdateLazerRegenerationCountdown(float time, float maxTime)
+        public void UpdateLaserRegenerationCountdown(float time, float maxTime)
         {
-            LazerGenerationCountdownField.text = $"Генерация лазера: {time:F} / {maxTime:F}";
+            LaserGenerationCountdownField.text = $"Генерация лазера: {time:F} / {maxTime:F}";
         }
 
         /// <summary>

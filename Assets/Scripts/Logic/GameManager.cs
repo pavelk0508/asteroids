@@ -41,7 +41,7 @@ namespace Asteroids.Logic
         /// <summary>
         /// Функция, которая вызывается при создании объекта-лазера для получения либо экземпляра, либо текущего объекта.
         /// </summary>
-        private event SpawningFunction _lazerSpawning;
+        private event SpawningFunction _laserSpawning;
 
         /// <summary>
         /// Функция, которая вызывается при создании метеорита для получения либо экземпляра, либо текущего объекта.
@@ -185,10 +185,10 @@ namespace Asteroids.Logic
         /// <summary>
         /// Указание функции, вызываемой при создании экземпляра пули.
         /// </summary>
-        /// <param name="lazerSpawningFunction">Функция создания или переиспользования лазера.</param>
-        public void SetLazerSpawningFunction(SpawningFunction lazerSpawningFunction)
+        /// <param name="laserSpawningFunction">Функция создания или переиспользования лазера.</param>
+        public void SetLaserSpawningFunction(SpawningFunction laserSpawningFunction)
         {
-            _lazerSpawning = lazerSpawningFunction;
+            _laserSpawning = laserSpawningFunction;
         }
 
         /// <summary>
@@ -345,9 +345,9 @@ namespace Asteroids.Logic
             _gameUI.UpdatePlayerPosition(_player.Position);
             _gameUI.UpdatePlayerVelocity(_player.Velocity);
             _gameUI.UpdatePlayerAngle(_player.Angle);
-            _gameUI.UpdateLazerCounddown(_player.CurrentLazerCountdown, _player.LazerCountdown);
-            _gameUI.UpdateLazerRegenerationCountdown(_player.CurrentLazerGenerationCountDown, _player.LazerGenerationCountDown);
-            _gameUI.UpdateLazersCount(_player.LazerCount, _player.MaxLazerCount);
+            _gameUI.UpdateLaserCounddown(_player.CurrentLaserCountdown, _player.LaserCountdown);
+            _gameUI.UpdateLaserRegenerationCountdown(_player.CurrentLaserGenerationCountDown, _player.LaserGenerationCountDown);
+            _gameUI.UpdateLasersCount(_player.LaserCount, _player.MaxLaserCount);
             _gameUI.UpdateScore(Score);
         }
 
@@ -387,9 +387,9 @@ namespace Asteroids.Logic
         /// <param name="position">Позиция пули.</param>
         /// <param name="direction">Направление пули.</param>
         /// <returns>Экземпляр пули.</returns>
-        public Lazer AddLazer(Vector3 position, float angle)
+        public Laser AddLaser(Vector3 position, float angle)
         {
-            var entity = AddEntity<Lazer>(_lazerSpawning);
+            var entity = AddEntity<Laser>(_laserSpawning);
             entity.Position = position;
             entity.Angle = angle;
             return entity;
