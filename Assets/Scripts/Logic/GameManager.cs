@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Asteroids.Logic
 {
@@ -19,39 +21,29 @@ namespace Asteroids.Logic
         public event SimpleEventHandler OnGameOver;
 
         /// <summary>
-        /// Делегат функции создания объекта в реализации.
-        /// </summary>
-        public delegate IGameEntity SpawningFunction();
-
-        /// <summary>
-        /// Делегат функции создания метеорита с указанием его типа.
-        /// </summary>
-        public delegate IGameEntity MeteorSpawningFunction(MeteorType meteorType);
-
-        /// <summary>
         /// Функция, которая вызывается при создании игрока для получения либо экземпляра, либо текущего объекта.
         /// </summary>
-        private event SpawningFunction _playerSpawning;
+        public Func<IGameEntity> PlayerSpawnFunc;
 
         /// <summary>
         /// Функция, которая вызывается при создании объекта-пули для получения либо экземпляра, либо текущего объекта.
         /// </summary>
-        private event SpawningFunction _bulletSpawning;
+        public Func<IGameEntity> BulletSpawnFunc;
 
         /// <summary>
         /// Функция, которая вызывается при создании объекта-лазера для получения либо экземпляра, либо текущего объекта.
         /// </summary>
-        private event SpawningFunction _laserSpawning;
+        public Func<IGameEntity> LaserSpawnFunc;
 
         /// <summary>
         /// Функция, которая вызывается при создании метеорита для получения либо экземпляра, либо текущего объекта.
         /// </summary>
-        private event MeteorSpawningFunction _meteorSpawning;
+        public Func<MeteorType, IGameEntity> MeteorSpawnFunc;
         
         /// <summary>
         /// Функция, которая вызывается при создании летающей тарелки для получения либо экземпляра, либо текущего объекта.
         /// </summary>
-        private event SpawningFunction _ufoSpawning;
+        public Func<IGameEntity> UfoSpawnFunc;
 
         /// <summary>
         /// Список всех объектов в сцене.
@@ -103,11 +95,6 @@ namespace Asteroids.Logic
         }
 
         /// <summary>
-        /// Количество метеоритов в сцене.
-        /// </summary>
-        public int CurrentMeteorsCount => _entities.FindAll(a => a is Meteor).Count;
-
-        /// <summary>
         /// Время ожидания летающей тарелки.
         /// </summary>
         public float CountdownSpawnUfo = 10f;
@@ -133,17 +120,17 @@ namespace Asteroids.Logic
         /// </summary>
         public void Play()
         {
-            _player = AddEntity<Player>(_playerSpawning);
+            _player = AddEntity<Player>(PlayerSpawnFunc?.Invoke());
             IsPlaying = true;
         }
 
         /// <summary>
         /// Создание метеора и расположение его в окне.
         /// </summary>
-        /// <param name="meteorInstance">Экземпляр объекта.</param>
-        private void GenerateMeteor(IGameEntity meteorInstance)
+        private void GenerateMeteor()
         {
-            var meteorEntity = AddEntity<Meteor>(() => meteorInstance);
+            var meteorInstance = MeteorSpawnFunc?.Invoke(MeteorType.Big);
+            var meteorEntity = AddEntity<Meteor>(meteorInstance);
 
             var rect = GameWindow.GetRect();
 
@@ -162,51 +149,6 @@ namespace Asteroids.Logic
 
             meteorEntity.Position = new Vector3(x, y, 0);
             meteorEntity.Velocity = new Vector3(Random.Range(10f, 30f), Random.Range(10f, 30f));
-        }
-
-        /// <summary>
-        /// Указание функции, вызываемой при создании экземпляра игрока.
-        /// </summary>
-        /// <param name="playerSpawningFunction">Функция создания или переиспользования игрока.</param>
-        public void SetPlayerSpawningFunction(SpawningFunction playerSpawningFunction)
-        {
-            _playerSpawning = playerSpawningFunction;
-        }
-
-        /// <summary>
-        /// Указание функции, вызываемой при создании экземпляра пули.
-        /// </summary>
-        /// <param name="bulletSpawningFunction">Функция создания или переиспользования пули.</param>
-        public void SetBulletSpawningFunction(SpawningFunction bulletSpawningFunction)
-        {
-            _bulletSpawning = bulletSpawningFunction;
-        }
-
-        /// <summary>
-        /// Указание функции, вызываемой при создании экземпляра пули.
-        /// </summary>
-        /// <param name="laserSpawningFunction">Функция создания или переиспользования лазера.</param>
-        public void SetLaserSpawningFunction(SpawningFunction laserSpawningFunction)
-        {
-            _laserSpawning = laserSpawningFunction;
-        }
-
-        /// <summary>
-        /// Указание функции, вызываемой при создании экземпляра метеорита.
-        /// </summary>
-        /// <param name="meteorSpawningFunction">Функция создания или переиспользования метеорита.</param>
-        public void SetMeteorSpawningFunction(MeteorSpawningFunction meteorSpawningFunction)
-        {
-            _meteorSpawning = meteorSpawningFunction;
-        }
-        
-        /// <summary>
-        /// Указание функции, вызываемой при создании экземпляра летающей тарелки.
-        /// </summary>
-        /// <param name="ufoSpawningFunction">Функция создания или переиспользования летающей тарелки.</param>
-        public void SetUfoSpawningFunction(SpawningFunction ufoSpawningFunction)
-        {
-            _ufoSpawning = ufoSpawningFunction;
         }
 
         /// <summary>
@@ -259,7 +201,7 @@ namespace Asteroids.Logic
             foreach (var entity in entities)
             {
                 entity.Update(this);
-                var newPosition = entity.Position + entity.Velocity * GameWindow.GetTimeStep();
+                var newPosition = entity.Position + entity.Velocity * Time.deltaTime;
                 if (entity.CanBeDeleted || !GameWindow.IsContains(newPosition) && entity.IsCanBeDeletedWhenOffscreen())
                 {
                     DeleteEntity(entity);
@@ -296,7 +238,7 @@ namespace Asteroids.Logic
                 return;
             }
 
-            _currentCountdownSpawnUfo += GameWindow.GetTimeStep();
+            _currentCountdownSpawnUfo += Time.deltaTime;
             if (_currentCountdownSpawnUfo > CountdownSpawnUfo)
             {
                 GenerateUfo();
@@ -332,8 +274,7 @@ namespace Asteroids.Logic
         {
             if (factCount < MeteorsCount)
             {
-                var meteorInstance = _meteorSpawning?.Invoke(MeteorType.Big);
-                GenerateMeteor(meteorInstance);
+                GenerateMeteor();
             }
         }
         
@@ -354,13 +295,13 @@ namespace Asteroids.Logic
         /// <summary>
         /// Добавление объекта в сцену.
         /// </summary>
-        /// <param name="spawningFunction">Функция для создания экземпляра в реализации.</param>
+        /// <param name="gameEntity">Экземпляр объекта в реализации.</param>
         /// <typeparam name="T">Тип объекта.</typeparam>
         /// <returns>Экземпляр созданного объекта.</returns>
-        public T AddEntity<T>(SpawningFunction spawningFunction) where T : EntityBase, new()
+        public T AddEntity<T>(IGameEntity gameEntity) where T : EntityBase, new()
         {
             var entity = new T();
-            entity.Setup(spawningFunction?.Invoke());
+            entity.Setup(gameEntity);
             
             _entities ??= new List<EntityBase>();
             _entities.Add(entity);
@@ -375,7 +316,7 @@ namespace Asteroids.Logic
         /// <returns>Экземпляр пули.</returns>
         public Bullet AddBullet(Vector3 position, Vector3 direction)
         {
-            var entity = AddEntity<Bullet>(_bulletSpawning);
+            var entity = AddEntity<Bullet>(BulletSpawnFunc?.Invoke());
             entity.Position = position;
             entity.Velocity = direction;
             return entity;
@@ -389,7 +330,7 @@ namespace Asteroids.Logic
         /// <returns>Экземпляр пули.</returns>
         public Laser AddLaser(Vector3 position, float angle)
         {
-            var entity = AddEntity<Laser>(_laserSpawning);
+            var entity = AddEntity<Laser>(LaserSpawnFunc?.Invoke());
             entity.Position = position;
             entity.Angle = angle;
             return entity;
@@ -404,8 +345,8 @@ namespace Asteroids.Logic
         public Meteor AddMeteor(MeteorType type, Vector3 position, Vector3 velocity)
         {
             type = (MeteorType) Mathf.Clamp((int) type, (int) MeteorType.Big, (int) MeteorType.Small);
-            var meteorInstance = _meteorSpawning?.Invoke(type);
-            var meteorEntity = AddEntity<Meteor>(() => meteorInstance);
+            var meteorInstance = MeteorSpawnFunc?.Invoke(type);
+            var meteorEntity = AddEntity<Meteor>(meteorInstance);
             meteorEntity.MeteorType = type;
             meteorEntity.Position = position;
             meteorEntity.Velocity = velocity;
@@ -419,8 +360,8 @@ namespace Asteroids.Logic
         /// <returns>Летающая тарелка.</returns>
         public Ufo AddUfo(Vector2 position)
         {
-            var ufoInstance = _ufoSpawning?.Invoke();
-            var ufo = AddEntity<Ufo>(() => ufoInstance);
+            var ufoInstance = UfoSpawnFunc?.Invoke();
+            var ufo = AddEntity<Ufo>(ufoInstance);
             ufo.Position = position;
             return ufo;
         }

@@ -1,4 +1,6 @@
-﻿namespace Asteroids.Logic
+﻿using UnityEngine;
+
+namespace Asteroids.Logic
 {
     /// <summary>
     /// Лазер.
@@ -16,7 +18,7 @@
         /// <param name="gameManager">Менеджер игры.</param>
         public override void Update(GameManager gameManager)
         {
-            _timeFade -= gameManager.GameWindow.GetTimeStep();
+            _timeFade -= Time.deltaTime;
             if (_timeFade <= 0)
             {
                 CanBeDeleted = true;

@@ -12,12 +12,12 @@ namespace Asteroids.View
         /// Окно игры.
         /// </summary>
         public GameWindow GameWindow;
-        
+
         /// <summary>
         /// Игровой интерфейс.
         /// </summary>
         public GameUI GameUI;
-        
+
         /// <summary>
         /// Менеджер игры-обработчик всех поведений.
         /// </summary>
@@ -42,17 +42,17 @@ namespace Asteroids.View
         /// Префаб маленького метеорита.
         /// </summary>
         public GameEntity SmallMeteorPrefab;
-        
+
         /// <summary>
         /// Префаб обычной пули игрока.
         /// </summary>
         public GameEntity BulletPrefab;
-        
+
         /// <summary>
         /// Префаб лазера.
         /// </summary>
         public GameEntity LaserPrefab;
-        
+
         /// <summary>
         /// Префаб летающей тарелки.
         /// </summary>
@@ -62,28 +62,31 @@ namespace Asteroids.View
         /// Панель главного меню.
         /// </summary>
         public GameObject MainMenuPanel;
-        
+
         /// <summary>
         /// Панель окончания игры.
         /// </summary>
         public GameObject GameOverPanel;
-        
+
         /// <summary>
         /// Панель внутриигрового UI.
         /// </summary>
         public GameObject InGameUI;
-        
+
         /// <summary>
         /// Инициализация менеджера.
         /// </summary>
         private void Start()
         {
-            _gameManager = new Logic.GameManager(GameWindow, GameUI);
-            _gameManager.SetPlayerSpawningFunction(SpawnPlayer);
-            _gameManager.SetUfoSpawningFunction(SpawnUfo);
-            _gameManager.SetMeteorSpawningFunction(SpawnMeteor);
-            _gameManager.SetBulletSpawningFunction(SpawnBullet);
-            _gameManager.SetLaserSpawningFunction(SpawnLaser);
+            _gameManager = new Logic.GameManager(GameWindow, GameUI)
+            {
+                PlayerSpawnFunc = SpawnPlayer,
+                UfoSpawnFunc = SpawnUfo,
+                MeteorSpawnFunc = SpawnMeteor,
+                BulletSpawnFunc = SpawnBullet,
+                LaserSpawnFunc = SpawnLaser
+            };
+            
             _gameManager.OnGameOver += OnGameOver;
         }
 
@@ -105,7 +108,7 @@ namespace Asteroids.View
             InGameUI.SetActive(true);
             _gameManager.Restart();
         }
-        
+
         /// <summary>
         /// Создание летающей тарелки.
         /// </summary>
@@ -141,7 +144,7 @@ namespace Asteroids.View
         {
             return Instantiate(PlayerPrefab, GameWindow.transform);
         }
-        
+
         /// <summary>
         /// Создание экземпляра метеорита.
         /// </summary>
@@ -166,7 +169,7 @@ namespace Asteroids.View
         {
             _gameManager.Update();
         }
-        
+
         /// <summary>
         /// Передача вектора движения игроку.
         /// </summary>
@@ -193,7 +196,7 @@ namespace Asteroids.View
         {
             _gameManager.SetPlayerSecondaryShootingState(state);
         }
-        
+
         /// <summary>
         /// Очистка памяти после окончания игры.
         /// </summary>

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Asteroids.Logic
 {
@@ -9,21 +8,15 @@ namespace Asteroids.Logic
     public abstract class EntityBase
     {
         /// <summary>
-        /// Словарь соотношений игровых объектов и логических объектов.
-        /// Данный словарь нужен для соотношений при обработке столкновений.
-        /// </summary>
-        private static Dictionary<IGameEntity, EntityBase> _dictionaryOfEntities = new();
-
-        /// <summary>
         /// Угол поворота.
         /// </summary>
         private float _angle;
-        
+
         /// <summary>
         /// Позиция.
         /// </summary>
         private Vector2 _position;
-        
+
         /// <summary>
         /// Скорость.
         /// </summary>
@@ -73,13 +66,12 @@ namespace Asteroids.Logic
         /// Может ли быть удален. Данное поле отражает флаг удаления в следующем кадре.
         /// </summary>
         public bool CanBeDeleted = false;
-        
+
         /// <summary>
         /// Инициализация объекта.
         /// </summary>
         protected EntityBase()
         {
-            
         }
 
         /// <summary>
@@ -88,13 +80,8 @@ namespace Asteroids.Logic
         /// <param name="gameEntity">Игровой объект в реализации.</param>
         public void Setup(IGameEntity gameEntity)
         {
-            if (_gameEntity != null)
-            {
-                _dictionaryOfEntities.Remove(_gameEntity);
-            }
-            
             _gameEntity = gameEntity;
-            _dictionaryOfEntities.Add(_gameEntity, this);
+            _gameEntity.EntityFunc = () => this;
             _gameEntity.OnCollision += OnCollision;
         }
 
@@ -104,7 +91,6 @@ namespace Asteroids.Logic
         /// <param name="gameManager">Менеджер игры.</param>
         public virtual void Update(GameManager gameManager)
         {
-            
         }
 
         /// <summary>
@@ -113,10 +99,7 @@ namespace Asteroids.Logic
         /// <param name="entity">Объект в реализации.</param>
         private void OnCollision(IGameEntity entity)
         {
-            if (_dictionaryOfEntities.ContainsKey(entity))
-            {
-                OnCollision(_dictionaryOfEntities[entity]);
-            }
+            OnCollision(entity.EntityFunc?.Invoke());
         }
 
         /// <summary>
@@ -125,9 +108,8 @@ namespace Asteroids.Logic
         /// <param name="entityBase">Логическое представление объекта.</param>
         protected virtual void OnCollision(EntityBase entityBase)
         {
-            
         }
-        
+
         /// <summary>
         /// Может ли быть удален, если попадает за пределы экрана.
         /// </summary>
@@ -141,11 +123,6 @@ namespace Asteroids.Logic
         /// </summary>
         public void ForceClear()
         {
-            if (_dictionaryOfEntities.ContainsKey(_gameEntity))
-            {
-                _dictionaryOfEntities.Remove(_gameEntity);
-            }
-
             _gameEntity?.Clear();
         }
 

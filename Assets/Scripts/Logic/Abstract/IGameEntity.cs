@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Asteroids.Logic
 {
@@ -7,6 +8,11 @@ namespace Asteroids.Logic
     /// </summary>
     public interface IGameEntity
     {
+        /// <summary>
+        /// Функция, которая возвращает связанный объект из логики.
+        /// </summary>
+        Func<EntityBase> EntityFunc { get; set; }
+
         /// <summary>
         /// Делегат события столкновения.
         /// </summary>

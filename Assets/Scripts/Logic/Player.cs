@@ -89,10 +89,10 @@ namespace Asteroids.Logic
         public override void Update(GameManager gameManager)
         {
             var normal = Vector3.Cross(gameManager.GameWindow.GetHorizontalAxis(), gameManager.GameWindow.GetVerticalAxis());
-            Angle = Angle - _inputMovement.x * _angularVelocity * gameManager.GameWindow.GetTimeStep();
+            Angle = Angle - _inputMovement.x * _angularVelocity * Time.deltaTime;
             var quaternion = Quaternion.AngleAxis(Angle, normal);
             var direction = (Vector2) (quaternion * Vector2.right);
-            Velocity = Vector2.ClampMagnitude(Velocity + direction * _inputMovement.y * VelocityModifier * gameManager.GameWindow.GetTimeStep(), MaxVelocity);
+            Velocity = Vector2.ClampMagnitude(Velocity + direction * _inputMovement.y * VelocityModifier * Time.deltaTime, MaxVelocity);
 
             if (_inputMovement.y < 0.5f)
             {
@@ -127,7 +127,7 @@ namespace Asteroids.Logic
             }
             else
             {
-                _bulletShootTime += gameManager.GameWindow.GetTimeStep();
+                _bulletShootTime += Time.deltaTime;
             }
         }
 
@@ -139,7 +139,7 @@ namespace Asteroids.Logic
         {
             if (CurrentLaserGenerationCountDown < LaserGenerationCountDown)
             {
-                CurrentLaserGenerationCountDown += gameManager.GameWindow.GetTimeStep();
+                CurrentLaserGenerationCountDown += Time.deltaTime;
             }
             else
             {
@@ -163,7 +163,7 @@ namespace Asteroids.Logic
             }
             else
             {
-                CurrentLaserCountdown += gameManager.GameWindow.GetTimeStep();
+                CurrentLaserCountdown += Time.deltaTime;
             }
         }
 

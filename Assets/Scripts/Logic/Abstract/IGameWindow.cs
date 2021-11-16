@@ -8,12 +8,6 @@ namespace Asteroids.Logic
     public interface IGameWindow
     {
         /// <summary>
-        /// Возвращает время кадра.
-        /// </summary>
-        /// <returns>Время кадра.</returns>
-        float GetTimeStep();
-        
-        /// <summary>
         /// Проверка - содержит ли окно данную точку.
         /// </summary>
         /// <param name="position">Позиция точки.</param>

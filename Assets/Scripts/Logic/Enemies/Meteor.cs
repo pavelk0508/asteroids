@@ -28,7 +28,7 @@ namespace Asteroids.Logic
         /// <param name="gameManager">Игровой контроллер.</param>
         public override void Update(GameManager gameManager)
         {
-            Angle += AngularVelocity * gameManager.GameWindow.GetTimeStep();
+            Angle += AngularVelocity * Time.deltaTime;
             base.Update(gameManager);
         }
 

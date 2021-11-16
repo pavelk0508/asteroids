@@ -1,4 +1,5 @@
-﻿using Asteroids.Logic;
+﻿using System;
+using Asteroids.Logic;
 using UnityEngine;
 
 namespace Asteroids.View
@@ -8,6 +9,11 @@ namespace Asteroids.View
     /// </summary>
     public class GameEntity : MonoBehaviour, IGameEntity
     {
+        /// <summary>
+        /// Функция, которая возвращает связанный объект из логики.
+        /// </summary>
+        public Func<EntityBase> EntityFunc { get; set; }
+
         /// <summary>
         /// Событие столкновения.
         /// </summary>

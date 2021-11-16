@@ -28,7 +28,7 @@ namespace Asteroids.Logic
         /// <param name="gameManager">Игровой контроллер.</param>
         public override void Update(GameManager gameManager)
         {
-            Turning(gameManager);
+            Turning();
             MoveToPlayer(gameManager);
             base.Update(gameManager);
         }
@@ -39,17 +39,16 @@ namespace Asteroids.Logic
         /// <param name="gameManager"></param>
         private void MoveToPlayer(GameManager gameManager)
         {
-            var targetVector = (gameManager.Player.Position - Position).normalized * Speed * gameManager.GameWindow.GetTimeStep();
+            var targetVector = (gameManager.Player.Position - Position).normalized * Speed * Time.deltaTime;
             Velocity = Vector2.ClampMagnitude(Velocity + targetVector, Speed);
         }
 
         /// <summary>
         /// Небольшие наклоны для живой картинки.
         /// </summary>
-        /// <param name="gameManager">Игровой менеджер.</param>
-        private void Turning(GameManager gameManager)
+        private void Turning()
         {
-            _currentAngle += gameManager.GameWindow.GetTimeStep() * 2f;
+            _currentAngle += Time.deltaTime * 2f;
 
             if (_currentAngle > 6.28f)
             {
