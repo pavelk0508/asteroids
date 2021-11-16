@@ -31,7 +31,7 @@ namespace Asteroids.Logic
             Angle += AngularVelocity * gameManager.GameWindow.GetTimeStep();
             base.Update(gameManager);
         }
-        
+
         /// <summary>
         /// Создание частей после уничтожения.
         /// </summary>
@@ -49,14 +49,14 @@ namespace Asteroids.Logic
             meteor2.Angle = Angle;
             meteor2.AngularVelocity -= meteor1.AngularVelocity;
 
-            if (MeteorType == MeteorType.Big)
+            switch (MeteorType)
             {
-                meteor2.Angle += 180f;
-            }
-
-            if (MeteorType == MeteorType.Middle)
-            {
-                meteor2.Angle += 90f;
+                case MeteorType.Big:
+                    meteor2.Angle += 180f;
+                    break;
+                case MeteorType.Middle:
+                    meteor2.Angle += 90f;
+                    break;
             }
         }
     }

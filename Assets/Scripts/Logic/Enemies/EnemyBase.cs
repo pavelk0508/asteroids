@@ -9,7 +9,7 @@
         /// Количество необходимых выстрелов в метеорит для уничтожения.
         /// </summary>
         public int HP = 1;
-        
+
         /// <summary>
         /// Количество очков за уничтожение
         /// </summary>
@@ -43,7 +43,7 @@
             }
 
             CanBeDeleted = true;
-            
+
             OnDead(gameManager);
         }
 
@@ -90,7 +90,6 @@
         /// </summary>
         protected virtual void OnDead(GameManager gameManager)
         {
-            
         }
     }
 }

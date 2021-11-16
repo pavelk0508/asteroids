@@ -21,7 +21,7 @@ namespace Asteroids.Logic
         /// Скорость перемещения.
         /// </summary>
         private float Speed = 100f;
-        
+
         /// <summary>
         /// Обновление поведения.
         /// </summary>
@@ -42,7 +42,7 @@ namespace Asteroids.Logic
             var targetVector = (gameManager.Player.Position - Position).normalized * Speed * gameManager.GameWindow.GetTimeStep();
             Velocity = Vector2.ClampMagnitude(Velocity + targetVector, Speed);
         }
-        
+
         /// <summary>
         /// Небольшие наклоны для живой картинки.
         /// </summary>
@@ -55,9 +55,8 @@ namespace Asteroids.Logic
             {
                 _currentAngle = 0f;
             }
-            
+
             Angle = Mathf.Sin(_currentAngle) * 25f;
         }
-
     }
 }

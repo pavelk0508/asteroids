@@ -2,41 +2,99 @@
 
 namespace Asteroids.Logic
 {
+    /// <summary>
+    /// Класс, описывающий игрока.
+    /// </summary>
     public class Player : EntityBase
     {
+        /// <summary>
+        /// Коэффициент влияние двигателя на траекторию движения.
+        /// </summary>
         public float VelocityModifier = 1000f;
 
-        public float LazerCountdown { get; private set; } = 1f;
+        /// <summary>
+        /// Время отката лазера.
+        /// </summary>
+        public readonly float LazerCountdown = 1f;
+        
+        /// <summary>
+        /// Текущее время отката лазера.
+        /// </summary>
         public float CurrentLazerCountdown = 1f;
 
+        /// <summary>
+        /// Текущее время отката обычного выстрела.
+        /// </summary>
         private float _bulletShootTime = 0f;
-        private float _periodBulletShoot = 0.25f;
+        
+        /// <summary>
+        /// Время отката обычного выстрела
+        /// </summary>
+        public readonly float PeriodBulletShoot = 0.25f;
 
-        private float _angleSensetivity = 180f;
-        private float _inputVelocityX = 0f;
-        private float _inputVelocityY = 0f;
+        /// <summary>
+        /// Уголовая скорость (град./сек) при нажатии на управление поворотом.
+        /// </summary>
+        private float _angularVelocity = 180f;
 
+        /// <summary>
+        /// Значение ввода (x-горизонтальная ось, y-вертикальная).
+        /// </summary>
+        private Vector2 _inputMovement;
+
+        /// <summary>
+        /// Производится ли сейчас выстрел обычными пулями.
+        /// </summary>
         public bool PrimaryShooting = false;
+        
+        /// <summary>
+        /// Производится ли сейчас выстрел из лазера.
+        /// </summary>
         public bool SecondaryShooting = false;
 
-        public int MaxLazerCount = 3;
-        public int LazerCount = 3;
+        /// <summary>
+        /// Максимальное количество лазера.
+        /// </summary>
+        public readonly int MaxLazerCount = 3;
 
-        public readonly float LazerAppendingCountDown = 10f;
-        public float CurrentLazerAppendingCountDown { get; private set; }
+        /// <summary>
+        /// Текущее количество лазера.
+        /// </summary>
+        public int LazerCount { get; private set; } = 3;
 
-        public float MaxVelocity = 200f;
+        /// <summary>
+        /// Время регенерации лазера.
+        /// </summary>
+        public readonly float LazerGenerationCountDown = 10f;
+        
+        /// <summary>
+        /// Текущее время регенерации лазера.
+        /// </summary>
+        public float CurrentLazerGenerationCountDown { get; private set; }
+
+        /// <summary>
+        /// Максимальная скорость движения от двигателя.
+        /// </summary>
+        public readonly float MaxVelocity = 200f;
+        
+        /// <summary>
+        /// Жив ли игрок?
+        /// </summary>
         public bool IsDead = false;
 
+        /// <summary>
+        /// Обновление всех систем игрока.
+        /// </summary>
+        /// <param name="gameManager">Игровой менеджер.</param>
         public override void Update(GameManager gameManager)
         {
             var normal = Vector3.Cross(gameManager.GameWindow.GetHorizontalAxis(), gameManager.GameWindow.GetVerticalAxis());
-            Angle = Angle - _inputVelocityX * _angleSensetivity * gameManager.GameWindow.GetTimeStep();
+            Angle = Angle - _inputMovement.x * _angularVelocity * gameManager.GameWindow.GetTimeStep();
             var quaternion = Quaternion.AngleAxis(Angle, normal);
             var direction = (Vector2) (quaternion * Vector2.right);
-            Velocity = Vector2.ClampMagnitude(Velocity + direction * _inputVelocityY * VelocityModifier * gameManager.GameWindow.GetTimeStep(), MaxVelocity);
+            Velocity = Vector2.ClampMagnitude(Velocity + direction * _inputMovement.y * VelocityModifier * gameManager.GameWindow.GetTimeStep(), MaxVelocity);
 
-            if (_inputVelocityY < 0.5f)
+            if (_inputMovement.y < 0.5f)
             {
                 Velocity = Vector2.Lerp(Velocity, Vector2.zero, Time.deltaTime);
             }
@@ -51,13 +109,19 @@ namespace Asteroids.Logic
             }
         }
 
+        /// <summary>
+        /// Проверка возможности выстрела обычными пулями.
+        /// </summary>
+        /// <param name="gameManager">Игровой менеджер.</param>
+        /// <param name="direction">Направление выстрела.</param>
         private void ProcessPrimaryShooting(GameManager gameManager, Vector2 direction)
         {
-            if (_bulletShootTime > _periodBulletShoot)
+            if (_bulletShootTime > PeriodBulletShoot)
             {
                 if (PrimaryShooting)
                 {
-                    gameManager.AddBullet(Position, direction.normalized * 1000f);
+                    var bulletInstance = gameManager.AddBullet(Position, direction.normalized * 1000f);
+                    bulletInstance.Angle = Angle;
                     _bulletShootTime = 0f;
                 }
             }
@@ -67,19 +131,23 @@ namespace Asteroids.Logic
             }
         }
 
+        /// <summary>
+        /// Проверка возможности выстрела из лазера.
+        /// </summary>
+        /// <param name="gameManager">Игровой менеджер.</param>
         private void ProcessSecondaryShooting(GameManager gameManager)
         {
-            if (CurrentLazerAppendingCountDown < LazerAppendingCountDown)
+            if (CurrentLazerGenerationCountDown < LazerGenerationCountDown)
             {
-                CurrentLazerAppendingCountDown += gameManager.GameWindow.GetTimeStep();
+                CurrentLazerGenerationCountDown += gameManager.GameWindow.GetTimeStep();
             }
             else
             {
-                CurrentLazerAppendingCountDown = LazerAppendingCountDown;
+                CurrentLazerGenerationCountDown = LazerGenerationCountDown;
                 if (LazerCount < MaxLazerCount)
                 {
                     LazerCount++;
-                    CurrentLazerAppendingCountDown = 0f;
+                    CurrentLazerGenerationCountDown = 0f;
                 }
             }
             
@@ -99,6 +167,10 @@ namespace Asteroids.Logic
             }
         }
 
+        /// <summary>
+        /// Проверка столкновения с противниками.
+        /// </summary>
+        /// <param name="entityBase">Противник.</param>
         protected override void OnCollision(EntityBase entityBase)
         {
             if (entityBase is EnemyBase)
@@ -107,10 +179,14 @@ namespace Asteroids.Logic
             }
         }
 
+        /// <summary>
+        /// Передача ввода пользователя в игрока.
+        /// </summary>
+        /// <param name="input">Направление движения.</param>
         public void ProcessMoveInput(Vector2 input)
         {
-            _inputVelocityX = input.x;
-            _inputVelocityY = Mathf.Clamp01(input.y);
+            _inputMovement.x = input.x;
+            _inputMovement.y = Mathf.Clamp01(input.y);
         }
     }
 }

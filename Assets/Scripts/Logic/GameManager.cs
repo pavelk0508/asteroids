@@ -342,10 +342,11 @@ namespace Asteroids.Logic
         /// </summary>
         private void UpdateUI()
         {
-            _gameUI.UpdatePosition(_player.Position);
-            _gameUI.UpdateVelocity(_player.Velocity);
+            _gameUI.UpdatePlayerPosition(_player.Position);
+            _gameUI.UpdatePlayerVelocity(_player.Velocity);
+            _gameUI.UpdatePlayerAngle(_player.Angle);
             _gameUI.UpdateLazerCounddown(_player.CurrentLazerCountdown, _player.LazerCountdown);
-            _gameUI.UpdateLazerAppendingCountdown(_player.CurrentLazerAppendingCountDown, _player.LazerAppendingCountDown);
+            _gameUI.UpdateLazerRegenerationCountdown(_player.CurrentLazerGenerationCountDown, _player.LazerGenerationCountDown);
             _gameUI.UpdateLazersCount(_player.LazerCount, _player.MaxLazerCount);
             _gameUI.UpdateScore(Score);
         }
@@ -468,7 +469,7 @@ namespace Asteroids.Logic
         /// </summary>
         ~GameManager()
         {
-            Debug.Log("Game manager has been destroyed!");
+            Debug.Log("[Asteroids]. Game manager has been destroyed! ");
         }
     }
 }
